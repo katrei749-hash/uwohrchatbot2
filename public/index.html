@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UW Oshkosh HR Interview Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Theme tokens ─────────────────────────────── */
+    :root {
+      --gold:    #C8A84B;
+      --gold-lt: #E8CF7A;
+      --white:   #FFFFFF;
+      --r:       12px;
+
+      /* ── DARK MODE: black + white + gold ── */
+      --bg-1: rgba(200,168,75,0.10);
+      --bg-2: rgba(200,168,75,0.03);
+      --bg-3: #0A0A0A;
+      --bg-4: #111111;
+      --bg-5: #000000;
+
+      --card-bg:        #181818;
+      --msg-bg:         #111111;
+      --input-bg:       #1E1E1E;
+      --input-area-bg:  #161616;
+      --border:         rgba(200,168,75,0.22);
+      --shadow:         0 8px 40px rgba(0,0,0,0.6);
+
+      --hdr-title:      #FFFFFF;
+      --hdr-sub:        rgba(255,255,255,0.55);
+      --crest-univ:     #E8CF7A;
+      --crest-dept:     rgba(255,255,255,0.45);
+
+      --body-text:      #F0F0F0;
+      --body-text-md:   #909090;
+      --setup-h2:       #FFFFFF;
+      --field-lbl:      #C8A84B;
+      --card-text:      #F0F0F0;
+      --select-bg:      #1E1E1E;
+
+      --bot-bubble-bg:    #242424;
+      --bot-bubble-color: #F0F0F0;
+      --user-bubble-from: #C8A84B;
+      --user-bubble-to:   #8A6014;
+      --user-bubble-color: #0A0A0A;
+      --typing-dot:       #C8A84B;
+      --input-focus-border: #C8A84B;
+      --input-border-top: rgba(200,168,75,0.12);
+      --btn-from: #1A1A1A;
+      --btn-to:   #333333;
+      --topbar-from: #0A0A0A;
+      --topbar-to:   #1A1A1A;
+      --avatar-from: #1A1A1A;
+      --avatar-to:   #333333;
+
+      --toggle-bg:      rgba(255,255,255,0.08);
+      --toggle-border:  rgba(255,255,255,0.18);
+      --toggle-color:   rgba(255,255,255,0.85);
+
+      /* keep navy for banners — they always have a light bg */
+      --navy:    #002147;
+      --navy-lt: #1A4072;
+    }
+
+    /* ── LIGHT MODE: white + black + gold ── */
+    [data-theme="light"] {
+      --bg-1: rgba(200,168,75,0.07);
+      --bg-2: rgba(0,0,0,0.03);
+      --bg-3: #FFFFFF;
+      --bg-4: #FAFAFA;
+      --bg-5: #F5F5F5;
+
+      --card-bg:        #FFFFFF;
+      --msg-bg:         #F5F5F5;
+      --input-bg:       #ECECEC;
+      --input-area-bg:  #FAFAFA;
+      --border:         rgba(0,0,0,0.12);
+      --shadow:         0 8px 40px rgba(0,0,0,0.08);
+
+      --hdr-title:      #0A0A0A;
+      --hdr-sub:        rgba(0,0,0,0.55);
+      --crest-univ:     #0A0A0A;
+      --crest-dept:     rgba(0,0,0,0.5);
+
+      --body-text:      #0A0A0A;
+      --body-text-md:   #555555;
+      --setup-h2:       #0A0A0A;
+      --field-lbl:      #0A0A0A;
+      --card-text:      #0A0A0A;
+      --select-bg:      #FFFFFF;
+
+      --bot-bubble-bg:    #FFFFFF;
+      --bot-bubble-color: #0A0A0A;
+      --user-bubble-from: #0A0A0A;
+      --user-bubble-to:   #2A2A2A;
+      --user-bubble-color: #FFFFFF;
+      --typing-dot:       #0A0A0A;
+      --input-focus-border: #0A0A0A;
+      --input-border-top: rgba(0,0,0,0.08);
+      --btn-from: #0A0A0A;
+      --btn-to:   #2A2A2A;
+      --topbar-from: #0A0A0A;
+      --topbar-to:   #1A1A1A;
+      --avatar-from: #0A0A0A;
+      --avatar-to:   #333333;
+
+      --toggle-bg:     rgba(0,0,0,0.05);
+      --toggle-border: rgba(0,0,0,0.15);
+      --toggle-color:  #0A0A0A;
+    }
+
+    /* ── Reset ────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-3);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transition: background .35s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% -10%, var(--bg-1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 90% 100%, var(--bg-2) 0%, transparent 60%),
+        linear-gradient(160deg, var(--bg-3) 0%, var(--bg-4) 50%, var(--bg-5) 100%);
+      z-index: 0;
+      pointer-events: none;
+      transition: background .35s ease;
+    }
+
+    /* ── Theme toggle ─────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      z-index: 300;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      color: var(--toggle-color);
+      border-radius: 999px;
+      padding: 6px 14px 6px 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(10px);
+      transition: all .2s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    header {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 860px;
+      padding: 36px 24px 0;
+      text-align: center;
+    }
+
+    .crest {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .crest-icon {
+      width: 52px; height: 52px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 13px; font-weight: 700;
+      color: #0A0A0A;
+      letter-spacing: 0.04em;
+      box-shadow: 0 0 0 4px rgba(200,168,75,0.2);
+    }
+
+    .crest-text { text-align: left; }
+
+    .crest-text .univ {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--crest-univ);
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      transition: color .3s;
+    }
+
+    .crest-text .dept {
+      font-size: 11px;
+      color: var(--crest-dept);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      transition: color .3s;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 4vw, 34px);
+      color: var(--hdr-title);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      transition: color .3s;
+    }
+
+    header p.subtitle {
+      font-size: 14px;
+      color: var(--hdr-sub);
+      letter-spacing: 0.04em;
+      transition: color .3s;
+    }
+
+    .gold-rule {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 16px auto 0;
+    }
+
+    /* ── Main card ────────────────────────────────── */
+    main {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 760px;
+      margin: 28px 16px 48px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(200,168,75,0.15);
+      overflow: hidden;
+      transition: background .3s, box-shadow .3s;
+    }
+
+    /* ── Screen system ────────────────────────────── */
+    .screen { display: none !important; }
+    .screen.active { display: block !important; }
+    #chat-screen.active { display: flex !important; }
+
+    /* ── Setup screen ─────────────────────────────── */
+    #setup-screen { padding: 40px 44px 44px; }
+
+    #setup-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--setup-h2);
+      margin-bottom: 6px;
+    }
+
+    #setup-screen .lead {
+      color: var(--body-text-md);
+      font-size: 14px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--field-lbl);
+      margin-bottom: 10px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .type-card {
+      border: 2px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s ease;
+      background: var(--msg-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .type-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--btn-from) 0%, var(--btn-to) 100%);
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .type-card.selected { border-color: var(--gold); }
+    .type-card.selected::before { opacity: 1; }
+
+    .type-card .icon {
+      font-size: 26px; margin-bottom: 8px;
+      position: relative; z-index: 1; display: block;
+    }
+
+    .type-card .name {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px; font-weight: 600;
+      color: var(--card-text);
+      position: relative; z-index: 1;
+      transition: color .2s ease; line-height: 1.3;
+    }
+
+    .type-card.selected .name { color: var(--gold-lt); }
+
+    .type-card .desc {
+      font-size: 11px; color: var(--body-text-md);
+      margin-top: 4px; position: relative; z-index: 1;
+      transition: color .2s ease; line-height: 1.4;
+    }
+
+    .type-card.selected .desc { color: rgba(255,255,255,0.6); }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .form-group { display: flex; flex-direction: column; }
+
+    select {
+      border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 12px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; color: var(--card-text);
+      background: var(--select-bg);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8A84B' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer; transition: border-color .2s;
+      margin-top: 8px;
+    }
+
+    select:focus { outline: none; border-color: var(--gold); }
+
+    [data-theme="light"] select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230A0A0A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    }
+
+    .anon-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(200,168,75,0.08);
+      border: 1px solid rgba(200,168,75,0.25);
+      border-radius: 8px; padding: 12px 16px;
+      margin-bottom: 28px; font-size: 13px;
+      color: var(--body-text-md);
+    }
+
+    .anon-badge .shield { font-size: 18px; }
+
+    .btn-start {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--btn-from) 0%, var(--btn-to) 100%);
+      color: var(--white); border: none; border-radius: var(--r);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.04em;
+      cursor: pointer; transition: all .2s ease;
+      position: relative; overflow: hidden;
+    }
+
+    .btn-start::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .btn-start:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,33,71,0.3); }
+    .btn-start:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── Chat screen ──────────────────────────────── */
+    #chat-screen { display: flex; flex-direction: column; height: 700px; }
+
+    .chat-topbar {
+      background: linear-gradient(135deg, var(--topbar-from) 0%, var(--topbar-to) 100%);
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(200,168,75,0.2);
+    }
+
+    .chat-topbar .interview-badge { display: flex; align-items: center; gap: 10px; }
+
+    .interview-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .interview-label { font-size: 13px; color: var(--gold-lt); font-weight: 600; letter-spacing: 0.06em; }
+    .interview-meta  { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+    .progress-wrap  { flex: 1; max-width: 160px; }
+    .progress-label { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-bottom: 4px; }
+    .progress-bar   { height: 3px; background: rgba(255,255,255,0.15); border-radius: 99px; overflow: hidden; }
+    .progress-fill  { height: 100%; background: var(--gold); border-radius: 99px; transition: width .4s ease; width: 0%; }
+
+    .messages {
+      flex: 1; overflow-y: auto; padding: 24px;
+      display: flex; flex-direction: column; gap: 16px;
+      background: var(--msg-bg);
+      transition: background .3s;
+    }
+
+    .messages::-webkit-scrollbar       { width: 8px; }
+    .messages::-webkit-scrollbar-track { background: rgba(0,33,71,0.05); border-radius: 99px; }
+    .messages::-webkit-scrollbar-thumb { background: rgba(0,33,71,0.3);  border-radius: 99px; }
+    .messages::-webkit-scrollbar-thumb:hover { background: rgba(0,33,71,0.5); }
+
+    .msg {
+      display: flex; gap: 12px; max-width: 86%;
+      animation: msgIn .3s ease;
+    }
+
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.bot  { align-self: flex-start; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+    .msg-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--avatar-from) 0%, var(--avatar-to) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 9px; font-weight: 700;
+      color: var(--gold-lt);
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .msg-bubble {
+      padding: 13px 16px; border-radius: 16px;
+      font-size: 14px; line-height: 1.6;
+    }
+
+    .msg.bot .msg-bubble {
+      background: var(--bot-bubble-bg);
+      color: var(--bot-bubble-color);
+      border-radius: 4px 16px 16px 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .msg.user .msg-bubble {
+      background: linear-gradient(135deg, var(--user-bubble-from) 0%, var(--user-bubble-to) 100%);
+      color: var(--user-bubble-color);
+      border-radius: 16px 4px 16px 16px;
+    }
+
+    .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 4px; }
+
+    .typing-indicator span {
+      width: 6px; height: 6px;
+      background: var(--typing-dot);
+      border-radius: 50%; animation: bounce .8s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: .15s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .30s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-5px); }
+    }
+
+    /* light mode banners */
+    .hr-banner {
+      margin: 4px 0;
+      background: linear-gradient(135deg, #FFF9ED 0%, #FFF3D4 100%);
+      border: 1px solid rgba(200,168,75,0.4);
+      border-radius: 12px; padding: 14px 16px;
+      font-size: 13px; color: #1A1A2E;
+      line-height: 1.6; animation: msgIn .3s ease;
+    }
+
+    .hr-banner strong { color: #002147; }
+
+    .hr-banner a {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 10px; background: #002147;
+      color: #E8CF7A; text-decoration: none;
+      padding: 9px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; transition: all .2s;
+    }
+
+    .hr-banner a:hover { background: #1A4072; transform: translateY(-1px); }
+
+    /* dark mode: flip banner to dark */
+    [data-theme="dark"] .hr-banner {
+      background: linear-gradient(135deg, #1E1800 0%, #2A2200 100%);
+      border-color: rgba(200,168,75,0.35);
+      color: #F0F0F0;
+    }
+
+    [data-theme="dark"] .hr-banner strong { color: #E8CF7A; }
+
+    [data-theme="dark"] .hr-banner a {
+      background: #C8A84B;
+      color: #0A0A0A;
+    }
+
+    [data-theme="dark"] .hr-banner a:hover { background: #E8CF7A; }
+
+    .harassment-banner {
+      margin: 4px 0;
+      background: linear-gradient(135deg, #FFF0F0 0%, #FFE4E4 100%);
+      border: 1.5px solid rgba(180,30,30,0.3);
+      border-radius: 12px; padding: 16px 18px;
+      font-size: 13px; color: #1A1A2E;
+      line-height: 1.6; animation: msgIn .3s ease;
+    }
+
+    [data-theme="dark"] .harassment-banner {
+      background: linear-gradient(135deg, #1E0000 0%, #2A0000 100%);
+      border-color: rgba(180,30,30,0.5);
+      color: #F0F0F0;
+    }
+
+    [data-theme="dark"] .harassment-banner strong { color: #FF6B6B; }
+
+    .harassment-banner strong { color: #8B0000; }
+
+    .harassment-banner a {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 10px; background: #8B0000; color: #fff;
+      text-decoration: none; padding: 9px 16px;
+      border-radius: 8px; font-size: 13px; font-weight: 600; transition: all .2s;
+    }
+
+    .harassment-banner a:hover { background: #a00000; transform: translateY(-1px); }
+
+    .chat-input-area {
+      padding: 16px 20px 24px;
+      background: var(--input-area-bg);
+      border-top: 1px solid var(--input-border-top);
+      display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0;
+      transition: background .3s;
+    }
+
+    textarea {
+      flex: 1; border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 11px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; color: var(--body-text);
+      resize: none; line-height: 1.5;
+      max-height: 100px; overflow-y: auto;
+      transition: border-color .2s, background .3s;
+      background: var(--input-bg);
+    }
+
+    textarea:focus { outline: none; border-color: var(--input-focus-border); background: var(--card-bg); }
+    textarea::placeholder { color: rgba(100,100,120,0.5); }
+    textarea:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-send {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--btn-from) 0%, var(--btn-to) 100%);
+      border: none; color: var(--white); font-size: 18px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .2s; flex-shrink: 0;
+    }
+
+    .btn-send:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,33,71,0.3); }
+    .btn-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ── Done page — standalone, separate from chatbot ── */
+    #done-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+      overflow-y: auto;
+    }
+
+    #done-page::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% -10%, var(--bg-1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 90% 100%, var(--bg-2) 0%, transparent 60%),
+        linear-gradient(160deg, var(--bg-3) 0%, var(--bg-4) 50%, var(--bg-5) 100%);
+      z-index: -1;
+    }
+
+    #done-page.visible { display: flex; }
+
+    .done-crest {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 44px;
+    }
+
+    .done-crest-icon {
+      width: 48px; height: 48px;
+      background: var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 12px; font-weight: 700;
+      color: #0A0A0A;
+      letter-spacing: 0.04em;
+      box-shadow: 0 0 0 4px rgba(200,168,75,0.2);
+    }
+
+    .done-crest .d-univ {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; letter-spacing: 0.06em; font-weight: 600;
+      color: var(--crest-univ); text-align: left;
+      transition: color .3s;
+    }
+
+    .done-crest .d-dept {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      margin-top: 2px; text-align: left;
+      color: var(--crest-dept); transition: color .3s;
+    }
+
+    .done-icon-ring {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: rgba(200,168,75,0.12);
+      border: 2px solid rgba(200,168,75,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; margin: 0 auto 28px;
+      animation: donePop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes donePop {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .done-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 40px);
+      color: var(--hdr-title);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: 20px; max-width: 580px;
+      transition: color .3s;
+    }
+
+    .done-rule {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 24px;
+    }
+
+    .done-msg {
+      font-size: 16px;
+      color: var(--hdr-sub);
+      line-height: 1.8; max-width: 520px;
+      margin: 0 auto 36px;
+      transition: color .3s;
+    }
+
+    .done-close-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(200,168,75,0.3);
+      border-radius: 16px;
+      padding: 24px 36px;
+      max-width: 460px;
+      margin: 0 auto 32px;
+    }
+
+    [data-theme="light"] .done-close-box {
+      background: rgba(0,33,71,0.04);
+    }
+
+    .done-close-box p {
+      font-size: 15px; line-height: 1.7;
+      color: var(--hdr-title); transition: color .3s;
+      margin-bottom: 14px;
+    }
+
+    .done-close-pill {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--btn-from) 0%, var(--btn-to) 100%);
+      color: var(--gold-lt);
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+    }
+
+    .done-footer {
+      font-size: 11px; letter-spacing: 0.1em;
+      color: var(--hdr-sub); opacity: 0.5;
+      transition: color .3s;
+    }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 600px) {
+      #setup-screen { padding: 28px 20px 32px; }
+      .type-grid    { grid-template-columns: 1fr; }
+      .form-row     { grid-template-columns: 1fr; }
+      #chat-screen  { height: 600px; }
+      .done-close-box { padding: 20px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── THEME TOGGLE ──────────────────────────────────────── -->
+<button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+  <span id="theme-icon">☀️</span>
+  <span id="theme-label">Light Mode</span>
+</button>
+
+<!-- ══════════════════════════════════════════════════════════
+     DONE PAGE — completely separate, full-screen, outside chatbot
+     ══════════════════════════════════════════════════════════ -->
+<div id="done-page" role="main" aria-live="polite">
+  <div class="done-crest">
+    <div class="done-crest-icon">UWO</div>
+    <div>
+      <div class="d-univ">University of Wisconsin Oshkosh</div>
+      <div class="d-dept">Human Resources Department</div>
+    </div>
+  </div>
+
+  <div class="done-icon-ring" id="done-icon">✓</div>
+  <h1 class="done-title" id="done-title">Interview Complete</h1>
+  <div class="done-rule"></div>
+  <p class="done-msg" id="done-msg">Thank you for your time.</p>
+
+  <div class="done-close-box">
+    <p id="done-sub">Your responses have been securely recorded and will be reviewed by the HR team. You have made a difference — thank you.</p>
+    <span class="done-close-pill">You may now close this tab ✕</span>
+  </div>
+
+  <p class="done-footer">UW OSHKOSH &nbsp;·&nbsp; HUMAN RESOURCES &nbsp;·&nbsp; CONFIDENTIAL &amp; ANONYMOUS</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MAIN CHATBOT UI
+     ══════════════════════════════════════════════════════════ -->
+<header id="site-header">
+  <div class="crest">
+    <div class="crest-icon">UWO</div>
+    <div class="crest-text">
+      <div class="univ">University of Wisconsin Oshkosh</div>
+      <div class="dept">Human Resources Department</div>
+    </div>
+  </div>
+  <h1>Employee Interview Portal</h1>
+  <p class="subtitle">Confidential &amp; Anonymous — Your voice shapes our community</p>
+  <div class="gold-rule"></div>
+</header>
+
+<main id="site-main">
+
+  <!-- ── SETUP SCREEN ──────────────────────────────── -->
+  <section id="setup-screen" class="screen active">
+    <h2>Begin Your Interview</h2>
+    <p class="lead">Please select the interview type and provide a few details before we begin. All responses are completely anonymous.</p>
+
+    <div class="anon-badge">
+      <span class="shield">🔒</span>
+      <span>This interview is <strong>fully anonymous</strong>. No personally identifying information is collected.</span>
+    </div>
+
+    <p class="field-label">Select Interview Type</p>
+    <div class="type-grid" id="type-grid">
+      <div class="type-card" data-type="stay" onclick="selectType(this)">
+        <span class="icon">💼</span>
+        <div class="name">Stay Interview</div>
+        <div class="desc">Help us understand what keeps you here</div>
+      </div>
+      <div class="type-card" data-type="ninety_day" onclick="selectType(this)">
+        <span class="icon">🌱</span>
+        <div class="name">90-Day Check-In</div>
+        <div class="desc">New employee milestone conversation</div>
+      </div>
+      <div class="type-card" data-type="exit" onclick="selectType(this)">
+        <span class="icon">🎓</span>
+        <div class="name">Exit Interview</div>
+        <div class="desc">Share feedback as you transition</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="field-label" for="department">Your Department</label>
+        <select id="department">
+          <option value="" disabled selected>Select department…</option>
+          <option>Academic Affairs</option>
+          <option>Administrative Services</option>
+          <option>Athletics</option>
+          <option>Auxiliary Services</option>
+          <option>Chancellor's Office</option>
+          <option>Enrollment Management</option>
+          <option>Facilities / Custodial</option>
+          <option>Finance</option>
+          <option>Human Resources</option>
+          <option>Information Technology</option>
+          <option>Library</option>
+          <option>Marketing &amp; Communications</option>
+          <option>Research &amp; Sponsored Programs</option>
+          <option>Student Affairs</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="field-label" for="tenure">Time with UW Oshkosh</label>
+        <select id="tenure">
+          <option value="" disabled selected>Select tenure…</option>
+          <option>Less than 6 months</option>
+          <option>6–12 months</option>
+          <option>1–3 years</option>
+          <option>4–7 years</option>
+          <option>More than 7 years</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-start" id="start-btn" onclick="startInterview()" disabled>
+      Begin Interview →
+    </button>
+  </section>
+
+  <!-- ── CHAT SCREEN ───────────────────────────────── -->
+  <section id="chat-screen" class="screen">
+    <div class="chat-topbar">
+      <div class="interview-badge">
+        <div class="interview-dot"></div>
+        <div>
+          <div class="interview-label" id="chat-title">Stay Interview</div>
+          <div class="interview-meta" id="chat-meta">Anonymous · UW Oshkosh HR</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label" id="progress-label">Question 0 of ~12</div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="chat-input-area">
+      <textarea
+        id="user-input"
+        placeholder="Type your response here…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="btn-send" id="send-btn" onclick="sendMessage()" title="Send">➤</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  let selectedType  = null;
+  let sessionId     = null;
+  let questionCount = 0;
+  let isSending     = false;
+
+  const LABELS = {
+    stay:       '💼 Stay Interview',
+    ninety_day: '🌱 90-Day Check-In',
+    exit:       '🎓 Exit Interview'
+  };
+
+  const COMPLETE_MSGS = {
+    stay: {
+      icon:  '💛',
+      title: 'Thank You for Your Feedback!',
+      msg:   'Your responses mean the world to us. Hearing what keeps you here helps us build a workplace where everyone can thrive — and we are committed to acting on your feedback.',
+      sub:   'Your responses have been securely recorded and will be reviewed by the HR team. Thank you for helping make UW Oshkosh a better place to work.'
+    },
+    ninety_day: {
+      icon:  '🌟',
+      title: 'Welcome to the Titan Family!',
+      msg:   'Thank you for sharing your early experiences with us. Your insights as a new member of the UW Oshkosh community are incredibly valuable, and we look forward to supporting your growth.',
+      sub:   'Your responses have been securely recorded and will be reviewed by the HR team. We are so glad you are here — welcome aboard!'
+    },
+    exit: {
+      icon:  '🎓',
+      title: 'Thank You for Everything',
+      msg:   'On behalf of the entire UW Oshkosh community, we sincerely thank you for your time, dedication, and contributions. Your feedback will help us grow. Once a Titan, always a Titan.',
+      sub:   'Your responses have been securely recorded and will be reviewed by the HR team. We wish you all the best in your next chapter.'
+    }
+  };
+
+  // ── Theme ──────────────────────────────────────────────────────────────────
+  (function initTheme() {
+    const saved = localStorage.getItem('uwo-theme');
+    if (saved) {
+      document.documentElement.dataset.theme = saved;
+      if (saved === 'light') {
+        document.getElementById('theme-icon').textContent  = '🌙';
+        document.getElementById('theme-label').textContent = 'Dark Mode';
+      }
+    }
+  })();
+
+  function toggleTheme() {
+    const html    = document.documentElement;
+    const isLight = html.dataset.theme === 'light';
+    html.dataset.theme = isLight ? 'dark' : 'light';
+    document.getElementById('theme-icon').textContent  = isLight ? '☀️' : '🌙';
+    document.getElementById('theme-label').textContent = isLight ? 'Light Mode' : 'Dark Mode';
+    localStorage.setItem('uwo-theme', html.dataset.theme);
+  }
+
+  // ── UI helpers ─────────────────────────────────────────────────────────────
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function selectType(card) {
+    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedType = card.dataset.type;
+    validateForm();
+  }
+
+  function validateForm() {
+    const ok = selectedType &&
+               document.getElementById('department').value &&
+               document.getElementById('tenure').value;
+    document.getElementById('start-btn').disabled = !ok;
+  }
+
+  document.getElementById('department').addEventListener('change', validateForm);
+  document.getElementById('tenure').addEventListener('change', validateForm);
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function addMessage(role, content) {
+    const msgs   = document.getElementById('messages');
+    const wrap   = document.createElement('div');
+    wrap.className = `msg ${role}`;
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.textContent = role === 'bot' ? 'UWO' : '👤';
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.innerHTML = content.replace(/\n/g, '<br>');
+    wrap.appendChild(avatar);
+    wrap.appendChild(bubble);
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function addTyping() {
+    const msgs = document.getElementById('messages');
+    const wrap = document.createElement('div');
+    wrap.className = 'msg bot';
+    wrap.id = 'typing-msg';
+    wrap.innerHTML = `
+      <div class="msg-avatar">UWO</div>
+      <div class="msg-bubble">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>`;
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing-msg');
+    if (t) t.remove();
+  }
+
+  function addHarassmentBanner() {
+    const msgs   = document.getElementById('messages');
+    const banner = document.createElement('div');
+    banner.className = 'harassment-banner';
+    banner.innerHTML = `
+      <strong>⚠️ We want to make sure you have the support you need.</strong><br>
+      If you are experiencing or have experienced harassment, discrimination, or any other serious workplace concern, please reach out directly to the HR team — you do not have to navigate this alone.
+      <br>
+      <a href="https://www.uwosh.edu/hr/about-us/" target="_blank" rel="noopener">
+        Contact an HR Representative →
+      </a>
+      <br>
+      <span style="font-size:12px; color:#888; display:block; margin-top:6px;">
+        Or visit directly: <strong style="color:#555; user-select:all;">https://www.uwosh.edu/hr/about-us/</strong>
+      </span>`;
+    msgs.appendChild(banner);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function addHrBanner() {
+    const msgs   = document.getElementById('messages');
+    const banner = document.createElement('div');
+    banner.className = 'hr-banner';
+    banner.innerHTML = `
+      <strong>💬 Would you like to speak with someone from HR?</strong><br>
+      If you'd prefer a personal conversation, the HR team is here for you.
+      <br>
+      <a href="https://www.uwosh.edu/hr/about-us/" target="_blank" rel="noopener">
+        👥 Visit HR — Find Our Contact Information →
+      </a>
+      <br>
+      <span style="font-size:12px; color:#888; display:block; margin-top:6px;">
+        Or visit directly: <strong style="color:#555; user-select:all;">https://www.uwosh.edu/hr/about-us/</strong>
+      </span>`;
+    msgs.appendChild(banner);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function updateProgress(count) {
+    const pct = Math.min((count / 12) * 100, 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = `Question ${count} of ~12`;
+  }
+
+  // ── Interview flow ─────────────────────────────────────────────────────────
+  async function startInterview() {
+    const dept   = document.getElementById('department').value;
+    const tenure = document.getElementById('tenure').value;
+    if (!selectedType || !dept || !tenure) return;
+
+    document.getElementById('start-btn').disabled    = true;
+    document.getElementById('start-btn').textContent = 'Starting…';
+
+    try {
+      const res  = await fetch('/api/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interviewType: selectedType, department: dept, tenure })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      sessionId     = data.sessionId;
+      questionCount = 1;
+
+      document.getElementById('chat-title').textContent = LABELS[selectedType];
+      document.getElementById('chat-meta').textContent  = `${dept} · ${tenure} · Anonymous`;
+      document.getElementById('messages').innerHTML     = '';
+      updateProgress(1);
+
+      showScreen('chat-screen');
+      addMessage('bot', data.message);
+      document.getElementById('user-input').focus();
+    } catch (err) {
+      alert('Unable to start interview. Please check your connection and try again.');
+      document.getElementById('start-btn').disabled    = false;
+      document.getElementById('start-btn').textContent = 'Begin Interview →';
+    }
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const text  = input.value.trim();
+    if (!text || isSending) return;
+
+    isSending = true;
+    input.disabled = true;
+    document.getElementById('send-btn').disabled = true;
+
+    addMessage('user', text);
+    input.value       = '';
+    input.style.height = 'auto';
+
+    addTyping();
+
+    try {
+      const res  = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, userMessage: text })
+      });
+      const data = await res.json();
+
+      removeTyping();
+
+      if (data.isHarassmentAlert) {
+        addHarassmentBanner();
+      } else if (data.offerHrContact) {
+        addHrBanner();
+      }
+
+      if (data.isComplete) {
+        addMessage('bot', data.message);
+        setTimeout(() => showDonePage(data.interviewType), 10000);
+      } else {
+        addMessage('bot', data.message);
+        questionCount++;
+        updateProgress(questionCount);
+        input.disabled = false;
+        document.getElementById('send-btn').disabled = false;
+        input.focus();
+      }
+    } catch (err) {
+      removeTyping();
+      addMessage('bot', 'I\'m sorry, something went wrong. Please try again or refresh the page.');
+      input.disabled = false;
+      document.getElementById('send-btn').disabled = false;
+    }
+
+    isSending = false;
+  }
+
+  // ── Done page (separate full-screen, outside chatbot) ─────────────────────
+  function showDonePage(type) {
+    const info = COMPLETE_MSGS[type] || COMPLETE_MSGS.stay;
+
+    document.getElementById('done-icon').textContent  = info.icon;
+    document.getElementById('done-title').textContent = info.title;
+    document.getElementById('done-msg').textContent   = info.msg;
+    document.getElementById('done-sub').textContent   = info.sub;
+
+    // Hide the chatbot header, main, and toggle
+    document.getElementById('site-header').style.display  = 'none';
+    document.getElementById('site-main').style.display    = 'none';
+    document.getElementById('theme-toggle').style.display = 'none';
+
+    // Reveal done page
+    document.getElementById('done-page').classList.add('visible');
+
+    // Save final state
+    if (sessionId) {
+      fetch('/api/save-partial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+      }).catch(() => {});
+    }
+  }
+
+  // ── Save partial on page unload ────────────────────────────────────────────
+  window.addEventListener('beforeunload', () => {
+    if (sessionId) {
+      navigator.sendBeacon('/api/save-partial', new Blob(
+        [JSON.stringify({ sessionId })],
+        { type: 'application/json' }
+      ));
+    }
+  });
+</script>
+
+</body>
+</html>
